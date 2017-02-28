@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("button").on("click",function(event){
+					event.preventDefault();
+					var txt=$("input").val();
+    				$.ajax({
+      					url: 'https://en.wikipedia.org/w/api.php',
+      					dataType: 'jsonp',
+      					data:{
+        					action: 'query',
+        					format: 'json',
+        					srsearch: txt,
+        					list: 'search',
+        					srlimit: 20,
+        				},
+
+        				success: function(data){
+          					var section=$("section");
+          					section.html("");
+          					var pages=data.query.search;
+          					console.log(pages);
+            				for(var i in pages){
+              					var row=$("<div>"); var well=$("<div>"); var title=$("<h4>");
+              					title.append("<a href='http://en.wikipedia.org/wiki/" + encodeURIComponent(pages[i].title) + "'>" + pages[i].title + "</a> - " + pages[i].snippet);
+              					well.append(title);
+              					row.append(well);
+              					section.append(row);
+            				}
+        				},
+    				})
+				});
+			})
+		</script>
+	</head>
+	<body>
+		<div align="center">
+			<form>
+				<input type="text" placeholder="Search..." required></input>
+				<button>Search</button>
+			</form>
+			<section>
+			</section>
+		</div>
+	</body>
+
+</html>
